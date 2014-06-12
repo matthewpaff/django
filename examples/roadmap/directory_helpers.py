@@ -13,3 +13,12 @@ def page_records(objects, page_number=1, per_page=20):
         return paginator.page(1)
     except EmptyPage:
         return paginator.page(paginator.num_pages)
+
+def search_records(queryset, term, field="name"):
+    """Apply a short substring search to an explicitly allowed field."""
+    if field not in ("name", "title"):
+        raise ValueError("Only name and title can be searched")
+    term = term.strip()[:100]
+    if not term:
+        return queryset
+    return queryset.filter(**{field + "__icontains": term})
